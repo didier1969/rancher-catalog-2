@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM debian:stretch
 
 # Generate locale C.UTF-8 for postgres and general locale data
 ENV LANG C.UTF-8
