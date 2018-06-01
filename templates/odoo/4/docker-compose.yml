@@ -7,7 +7,7 @@ services:
     links:
       - db
     volumes:
-      - odoo-files:/var/lib/odoo,/etc/odoo,/mnt/extra-addons
+      - odoo-files:/var/lib/odoo
   
   db:
     image: postgres
