@@ -1,14 +1,12 @@
 version: '2'
 services:
   odoo:
-    image: odoo
+    image: dstadel:odoo11
     ports:
       - "8082:8069"
     links:
       - db
     volumes:
-      - odoo-filestore:/var/lib/odoo
-      - odoo-config:/etc/odoo
       - odoo-custom-addons:/mnt/extra-addons
   
   db:
@@ -22,10 +20,6 @@ services:
     
 volumes:
   odoo-custom-addons:
-    driver: rancher-nfs
-  odoo-filestore:
-    driver: rancher-nfs
-  odoo-config:
     driver: rancher-nfs
   odoo-db-data:
     driver: rancher-nfs
