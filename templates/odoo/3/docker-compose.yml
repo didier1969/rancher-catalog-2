@@ -7,8 +7,8 @@ services:
     links:
       - db
     volumes:
-      - odoo-custom-addons:/var/lib/odoo
-      - odoo-custom-addons:/etc/odoo
+      - odoo-filestore:/var/lib/odoo
+      - odoo-config:/etc/odoo
       - odoo-custom-addons:/mnt/extra-addons
   
   db:
@@ -16,8 +16,17 @@ services:
     environment:
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
     
 volumes:
   odoo-custom-addons:
     driver: rancher-nfs
     external: true
+  odoo-filestore:
+    driver: rancher-nfs
+  odoo-config:
+    driver: rancher-nfs
+  odoo-db-data:
+    driver: rancher-nfs
