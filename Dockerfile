@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM node:carbon-stretch
 
 # Generate locale C.UTF-8 for postgres and general locale data
 ENV LANG C.UTF-8
@@ -52,7 +52,7 @@ EXPOSE 8069 8071
 ENV ODOO_RC /etc/odoo/odoo.conf
 
 # Set default user when running the container
-USER odoo
+# USER odoo
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["odoo"]
