@@ -1,7 +1,7 @@
 odoo:
   image: odoo
   ports:
-    - "8069:8069"
+    - "8081:8069"
   links:
     - db
 db:
