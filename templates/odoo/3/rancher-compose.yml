@@ -1,6 +1,6 @@
 .catalog:
   name: "Odoo"
-  version: v0.1-dstadel
+  version: v0.3-dstadel
   description: "ERP management powered by Odoo"
   uuid: odoo-0
   questions:
