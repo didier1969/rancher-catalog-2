@@ -1,0 +1,19 @@
+odoo:
+  image: odoo
+  ports:
+    - "8082:8069"
+  links:
+    - db
+  volumes:
+    - odoo-custom-addons:/mnt/extra-addons
+
+db:
+  image: postgres
+  environment:
+    - POSTGRES_USER=odoo
+    - POSTGRES_PASSWORD=odoo
+    
+volumes:
+  odoo-custom-addons:
+    driver: local
+    external: true
