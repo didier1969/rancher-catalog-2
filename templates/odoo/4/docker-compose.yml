@@ -7,7 +7,7 @@ services:
     links:
       - db
     volumes:
-      - odoo-files:/var/lib/odoo
+      - odoo-custom-addons:/mnt/extra-addons
   
   db:
     image: postgres
@@ -19,7 +19,7 @@ services:
       - odoo-db-data:/var/lib/postgresql/data/pgdata
     
 volumes:
-  odoo-files:
+  odoo-custom-addons:
     driver: rancher-nfs
   odoo-db-data:
     driver: rancher-nfs
