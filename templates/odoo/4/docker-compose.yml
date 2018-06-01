@@ -1,0 +1,25 @@
+version: '2'
+services:
+  odoo:
+    image: odoo
+    ports:
+      - "8082:8069"
+    links:
+      - db
+    volumes:
+      - odoo-files:/var/lib/odoo,/etc/odoo,/mnt/extra-addons
+  
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    
+volumes:
+  odoo-files:
+    driver: rancher-nfs
+  odoo-db-data:
+    driver: rancher-nfs
