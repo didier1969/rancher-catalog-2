@@ -18,3 +18,4 @@ services:
 volumes:
   odoo-custom-addons:
     driver: rancher-nfs
+    external: true
