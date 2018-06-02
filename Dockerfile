@@ -53,7 +53,7 @@ RUN mkdir -p /mnt/extra-addons \
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
 # Copy the Odoo Utility modules to /mnt/extra-addons
-ADD odoo11-custom-modules/ /mnt/extra-addons
+ADD ./odoo11-custom-modules/ /mnt/extra-addons/
 
 # Expose Odoo services
 EXPOSE 8069 8071
