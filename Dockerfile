@@ -23,10 +23,10 @@ RUN set -x; \
         && tar xvf wkhtmltox.tar.xz \
         && cp wkhtmltox/lib/* /usr/local/lib/ \
         && cp wkhtmltox/bin/* /usr/local/bin/ \
-        && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/
-        && wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add -
-        && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
-        && apt-get update
+        && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/ \
+        && wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add - \
+        && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' \
+        && apt-get update \
         && apt install -y postgresql-client-common postgresql-client-9.4 postgresql-client-9.5 postgresql-client-9.6 postgresql-client-10
 
 # Install Odoo
