@@ -15,12 +15,19 @@ RUN set -x; \
             python3-renderpm \
             libssl1.0-dev \
             xz-utils \
+            nano \
+            zip \
+            unzip \
         && curl -o wkhtmltox.tar.xz -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
         && echo '3f923f425d345940089e44c1466f6408b9619562 wkhtmltox.tar.xz' | sha1sum -c - \
         && tar xvf wkhtmltox.tar.xz \
         && cp wkhtmltox/lib/* /usr/local/lib/ \
         && cp wkhtmltox/bin/* /usr/local/bin/ \
         && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/
+        && wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add -
+        && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+        && apt-get update
+        && apt install -y postgresql-client-common postgresql-client-9.4 postgresql-client-9.5 postgresql-client-9.6 postgresql-client-10
 
 # Install Odoo
 ENV ODOO_VERSION 11.0
@@ -52,7 +59,7 @@ EXPOSE 8069 8071
 ENV ODOO_RC /etc/odoo/odoo.conf
 
 # Set default user when running the container
-# USER odoo
+USER odoo
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["odoo"]

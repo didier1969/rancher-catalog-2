@@ -1,0 +1,25 @@
+version: '2'
+services:
+  odoo:
+    image: dstadel/odoo11
+    ports:
+      - "${odoo_port}:8069"
+    volumes:
+      - odoo-custom-addons:/mnt/extra-addons
+    labels:
+      io.rancher.container.pull_image: always
+  
+  db:
+    image: postgres:10
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    
+volumes:
+  odoo-custom-addons:
+    driver: rancher-nfs
+  odoo-db-data:
+    driver: rancher-nfs
