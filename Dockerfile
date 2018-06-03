@@ -53,7 +53,7 @@ RUN mkdir -p /mnt/extra-addons \
         
 # Copy the Odoo Utility modules to /mnt/extra-addons
 COPY ./README.md /mnt/extra-addons/
-COPY ./odoo11-custom-modules/* /mnt/extra-addons/
+COPY ./odoo11-custom-modules/ /mnt/extra-addons/
 
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
