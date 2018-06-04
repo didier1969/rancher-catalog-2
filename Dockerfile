@@ -1,70 +1,41 @@
-FROM node:carbon-stretch
+FROM openjdk:8-jre-alpine
 
-# Generate locale C.UTF-8 for postgres and general locale data
-ENV LANG C.UTF-8
+RUN addgroup -S neo4j && adduser -S -H -h /var/lib/neo4j -G neo4j neo4j
 
-# Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
-RUN set -x; \
-        apt-get update \
-        && apt-get install -y --no-install-recommends \
-            ca-certificates \
-            curl \
-            node-less \
-            python3-pip \
-            python3-setuptools \
-            python3-renderpm \
-            libssl1.0-dev \
-            xz-utils \
-            nano \
-            zip \
-            unzip \
-        && curl -o wkhtmltox.tar.xz -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
-        && echo '3f923f425d345940089e44c1466f6408b9619562 wkhtmltox.tar.xz' | sha1sum -c - \
-        && tar xvf wkhtmltox.tar.xz \
-        && cp wkhtmltox/lib/* /usr/local/lib/ \
-        && cp wkhtmltox/bin/* /usr/local/bin/ \
-        && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/ \
-        && wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add - \
-        && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' \
-        && apt-get update \
-        && apt install -y postgresql-client-common postgresql-client-9.4 postgresql-client-9.5 postgresql-client-9.6 postgresql-client-10
+ENV NEO4J_SHA256=ea04207536c91e83e1889b04ae3276876d1a9612e7fba69dbf188bb3d5e08cdd \
+    NEO4J_TARBALL=neo4j-community-3.4.0-unix.tar.gz \
+    NEO4J_EDITION=community
+ARG NEO4J_URI=http://dist.neo4j.org/neo4j-community-3.4.0-unix.tar.gz
 
-# Install Odoo
-ENV ODOO_VERSION 11.0
-ENV ODOO_RELEASE 20180602
-RUN set -x; \
-        curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo '4ffd77fa3923592e36b18568b26f284452cee1b8 odoo.deb' | sha1sum -c - \
-        && dpkg --force-depends -i odoo.deb \
-        && apt-get update \
-        && apt-get -y install -f --no-install-recommends \
-        && rm -rf /var/lib/apt/lists/* odoo.deb
+COPY ./local-package/* /tmp/
 
-# Copy entrypoint script and Odoo configuration file
-RUN pip3 install num2words xlwt phonenumbers pysftp cryptography paramiko
-COPY ./entrypoint.sh /
-RUN ["chmod", "+x", "/entrypoint.sh"]
-COPY ./odoo.conf /etc/odoo/
-RUN chown odoo /etc/odoo/odoo.conf
+RUN apk add --no-cache --quiet \
+    bash \
+    curl \
+    tini \
+    su-exec \
+    && curl --fail --silent --show-error --location --remote-name ${NEO4J_URI} \
+    && echo "${NEO4J_SHA256}  ${NEO4J_TARBALL}" | sha256sum -csw - \
+    && tar --extract --file ${NEO4J_TARBALL} --directory /var/lib \
+    && mv /var/lib/neo4j-* /var/lib/neo4j \
+    && rm ${NEO4J_TARBALL} \
+    && mv /var/lib/neo4j/data /data \
+    && chown -R neo4j:neo4j /data \
+    && chmod -R 777 /data \
+    && chown -R neo4j:neo4j /var/lib/neo4j \
+    && chmod -R 777 /var/lib/neo4j \
+    && ln -s /data /var/lib/neo4j/data \
+    && apk del curl
 
-# Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
-RUN mkdir -p /mnt/extra-addons \
-        && chown -R odoo /mnt/extra-addons
-        
-# Copy the Odoo Utility modules to /mnt/extra-addons
-COPY ./README.md /mnt/extra-addons/
-COPY ./odoo11-custom-modules/ /mnt/extra-addons/
+ENV PATH /var/lib/neo4j/bin:$PATH
 
-VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
+WORKDIR /var/lib/neo4j
 
-# Expose Odoo services
-EXPOSE 8069 8071
+VOLUME /data
 
-# Set the default config file
-ENV ODOO_RC /etc/odoo/odoo.conf
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-# Set default user when running the container
-USER odoo
+EXPOSE 7474 7473 7687
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["odoo"]
+ENTRYPOINT ["/sbin/tini", "-g", "--", "/docker-entrypoint.sh"]
+CMD ["neo4j"]

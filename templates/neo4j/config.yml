@@ -1,0 +1,5 @@
+name: Neo4j
+description: |
+  Neo4j is a highly scalable, robust native graph database.
+version: v0.1-dstadel
+category: Database
