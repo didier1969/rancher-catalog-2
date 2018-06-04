@@ -1,14 +1,16 @@
-orientdb:
-  image: orientdb
-  environment:
-    - ORIENTDB_ROOT_PASSWORD=${root_pwd}
-  ports:
-    - "8106:2424"
-    - "8107:2480"
-  volumes:
-    - orientdb-config:/orientdb/config
-    - orientdb-databases:/orientdb/databases
-    - orientdb-backup:/orientdb/backup
+version: '2'
+services:
+  orientdb:
+    image: orientdb
+    environment:
+      - ORIENTDB_ROOT_PASSWORD=${root_pwd}
+    ports:
+      - "8106:2424"
+      - "8107:2480"
+    volumes:
+      - orientdb-config:/orientdb/config
+      - orientdb-databases:/orientdb/databases
+      - orientdb-backup:/orientdb/backup
 
 volumes:
   orientdb-config:
