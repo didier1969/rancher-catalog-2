@@ -1,4 +1,7 @@
 orientdb:
   image: orientdb
+  environment:
+    - ORIENTDB_ROOT_PASSWORD=${root_pwd}
   ports:
-    - "8105:2480"
+    - "8106:2424"
+    - "8107:2480"

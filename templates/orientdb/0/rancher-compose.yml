@@ -4,5 +4,11 @@
   description: "OrientDB is the world’s fastest graph database. Period."
   uuid: orientdb-0
   questions:
+    - variable: "root_pwd"
+      description: "Root Password"
+      label: "Root Password:"
+      required: true
+      default: "" 
+      type: "string"
 
 orientdb:
