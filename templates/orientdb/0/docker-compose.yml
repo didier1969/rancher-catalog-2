@@ -8,14 +8,14 @@ services:
       - "8106:2424"
       - "8107:2480"
     volumes:
-      - orientdb-config:/orientdb/config
-      - orientdb-databases:/orientdb/databases
-      - orientdb-backup:/orientdb/backup
+      - config:/orientdb/config
+      - databases:/orientdb/databases
+      - backup:/orientdb/backup
 
 volumes:
-  orientdb-config:
+  config:
     driver: rancher-nfs
-  orientdb-databases:
+  databases:
     driver: rancher-nfs
-  orientdb-backup:
+  backup:
     driver: rancher-nfs
