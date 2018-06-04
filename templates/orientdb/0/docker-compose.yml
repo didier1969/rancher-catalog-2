@@ -1,4 +1,4 @@
 orientdb:
-  image: orientdb:latest
+  image: orientdb
   ports:
     - "8105:2480"
