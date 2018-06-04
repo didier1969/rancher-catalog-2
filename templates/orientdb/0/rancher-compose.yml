@@ -1,0 +1,8 @@
+.catalog:
+  name: "OrientDB"
+  version: v0.1-dstadel
+  description: "OrientDB is the world’s fastest graph database. Period."
+  uuid: orientdb-0
+  questions:
+
+orientdb:
