@@ -1,0 +1,26 @@
+.catalog:
+  name: "OrientDB"
+  version: v0.2-dstadel
+  description: "OrientDB is the world’s fastest graph database. Period."
+  uuid: orientdb-0
+  questions:
+    - variable: "root_pwd"
+      description: "Root Password"
+      label: "Root Password:"
+      required: true
+      default: "" 
+      type: "string"
+    - variable: "server_port"
+      description: "Server Port"
+      label: "Server Port:"
+      required: true
+      default: "8200" 
+      type: "string"
+    - variable: "web_port"
+      description: "Web portal Port"
+      label: "Web portal Port:"
+      required: true
+      default: "8201" 
+      type: "string"
+
+orientdb:

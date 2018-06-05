@@ -1,0 +1,13 @@
+version: '2'
+services:
+  orientdb:
+    image: dstadel/orientdb
+    environment:
+      - ORIENTDB_ROOT_PASSWORD=${root_pwd}
+    ports:
+      - "${server_port}:2424"
+      - "${web_port}:2480"
+    volumes:
+      - config:/orientdb/config
+      - databases:/orientdb/databases
+      - backup:/orientdb/backup
