@@ -1,7 +1,7 @@
 version: '2'
 services:
   orientdb:
-    image: orientdb
+    image: orientdb:3.0.1-spatial
     environment:
       - ORIENTDB_ROOT_PASSWORD=${root_pwd}
     ports:
