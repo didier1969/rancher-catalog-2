@@ -1,11 +1,6 @@
-odoo:
-  image: odoo
+neo4j:
+  image: neo4j:latest
   ports:
-    - "8069:8069"
-  links:
-    - db
-db:
-  image: postgres
-  environment:
-    - POSTGRES_USER=odoo
-    - POSTGRES_PASSWORD=odoo
+    - "8188:7474"
+    - "8187:7473"
+    - "8186:7687"
