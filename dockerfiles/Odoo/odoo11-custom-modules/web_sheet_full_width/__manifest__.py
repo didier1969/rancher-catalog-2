@@ -15,4 +15,5 @@
         "templates/assets.xml",
     ],
     "installable": True,
+    "auto_install": True
 }

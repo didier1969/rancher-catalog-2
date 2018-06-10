@@ -58,23 +58,23 @@ class db_backup(models.Model):
     name = fields.Char('Database', required=True, help='Database you want to schedule backups for',
                        default=_get_db_name)
     folder = fields.Char('Backup Directory', help='Absolute path for storing the backups', required='True',
-                         default='/odoo/backups')
+                         default='/var/lib/odoo/backups')
     backup_type = fields.Selection([('zip', 'Zip'), ('dump', 'Dump')], 'Backup Type', required=True, default='zip')
-    autoremove = fields.Boolean('Auto. Remove Backups',
+    autoremove = fields.Boolean('Auto. Remove Backups', default=True,
                                 help='If you check this option you can choose to automaticly remove the backup after xx days')
-    days_to_keep = fields.Integer('Remove after x days',
+    days_to_keep = fields.Integer('Remove after x days', default=10,
                                   help="Choose after how many days the backup should be deleted. For example:\nIf you fill in 5 the backups will be removed after 5 days.",
                                   required=True)
 
     # Columns for external server (SFTP)
-    sftp_write = fields.Boolean('Write to external server with sftp',
+    sftp_write = fields.Boolean('Write to external server with sftp', default=True,
                                 help="If you check this option you can specify the details needed to write to a remote server with SFTP.")
-    sftp_path = fields.Char('Path external server',
+    sftp_path = fields.Char('Path external server', default='/Didier_Perso/Backups_Perso/ODOO',
                             help='The location to the folder where the dumps should be written to. For example /odoo/backups/.\nFiles will then be written to /odoo/backups/ on your remote server.')
-    sftp_host = fields.Char('IP Address SFTP Server',
+    sftp_host = fields.Char('IP Address SFTP Server', default='77.57.10.186',
                             help='The IP address from your remote server. For example 192.168.0.1')
     sftp_port = fields.Integer('SFTP Port', help='The port on the FTP server that accepts SSH/SFTP calls.', default=22)
-    sftp_user = fields.Char('Username SFTP Server',
+    sftp_user = fields.Char('Username SFTP Server', default='dstadel',
                             help='The username where the SFTP connection should be made with. This is the user on the external server.')
     sftp_password = fields.Char('Password User SFTP Server',
                                 help='The password from the user where the SFTP connection should be made with. This is the password from the user on the external server.')

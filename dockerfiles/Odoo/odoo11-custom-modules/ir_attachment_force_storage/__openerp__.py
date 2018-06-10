@@ -9,6 +9,6 @@
     'data': [
         'pre_install.yml'
     ],
-    "auto_install": False,
+    "auto_install": True,
     'installable': True,
 }
