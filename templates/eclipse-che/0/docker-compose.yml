@@ -1,5 +1,5 @@
 che:
-  image: eclipse/che-server:latest
+  image: eclipse/che:latest
   tty: true
   environment:
     - CHE_HOST=173.212.243.187
