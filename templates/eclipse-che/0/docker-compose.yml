@@ -1,14 +1,16 @@
 che:
-  image: eclipse/che-server:latest
+  image: eclipse/che:latest
   tty: true
   environment:
     - CHE_HOST=173.212.243.187
-    - CHE_PORT=8080
+    - CHE_MULTIUSER=true
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - /var/lib/che/data:/data
   ports:
     - "8120:8080"
-    - "8121:5000"
+    - "5050:5050"
+    - "32768-65535:32768-65535"
   labels:
     io.rancher.container.pull_image: always
+  network_mode: "bridge"
