@@ -9,5 +9,6 @@ che:
     - /var/lib/che/data:/data
   ports:
     - "8120:8080"
+    - "8121:5000"
   labels:
     io.rancher.container.pull_image: always
