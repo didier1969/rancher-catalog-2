@@ -1,5 +1,5 @@
 che:
-  image: eclipse/che:latest
+  image: eclipse/che-server:latest
   tty: true
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
