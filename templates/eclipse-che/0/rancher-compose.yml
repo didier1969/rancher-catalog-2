@@ -1,0 +1,8 @@
+.catalog:
+  name: "EclipseChe"
+  version: v0.1-dstadel
+  description: "Eclipse Che is a developer workspace server and cloud IDE built for teams and organizations."
+  uuid: che-0
+  questions:
+
+che:

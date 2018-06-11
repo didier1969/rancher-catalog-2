@@ -1,0 +1,10 @@
+che:
+  image: eclipse/che:latest
+  tty: true
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /var/lib/che/data:/data
+  ports:
+    - "8120:8080"
+  labels:
+    io.rancher.container.pull_image: always
