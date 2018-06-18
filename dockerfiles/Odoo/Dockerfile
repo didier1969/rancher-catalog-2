@@ -41,11 +41,12 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy entrypoint script and Odoo configuration file
-RUN pip3 install num2words xlwt phonenumbers pysftp cryptography paramiko
+RUN pip3 install num2words xlwt
 COPY ./entrypoint.sh /
 RUN ["chmod", "+x", "/entrypoint.sh"]
 COPY ./odoo.conf /etc/odoo/
 RUN chown odoo /etc/odoo/odoo.conf
+RUN pip3 install phonenumbers pysftp cryptography paramiko
 
 # Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN mkdir -p /mnt/extra-addons \
