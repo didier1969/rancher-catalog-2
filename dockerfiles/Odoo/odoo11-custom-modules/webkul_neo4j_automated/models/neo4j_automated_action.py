@@ -17,7 +17,7 @@
 import logging
 _logger = logging.getLogger(__name__)
 try:
-    from py2neo.packages.neo4j.v1 import GraphDatabase, basic_auth
+    from py2neo import Graph
 except Exception as e:
     _logger.error("#WKDEBUG-1  python  py2neo library not installed .")
 
@@ -29,9 +29,6 @@ except ImportError: import json
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-
-
-
 
 
 class BaseAutomation(models.Model):
@@ -47,10 +44,10 @@ class BaseAutomation(models.Model):
             connection_obj = self.env["odoo.neo4j.config"].search([('active','=',True)],limit=1)
             if connection_obj:
                 url = connection_obj.url
+                port = connection_obj.port
                 uname = connection_obj.username
                 pwd = connection_obj.password
-                driver = GraphDatabase.driver(url, auth=basic_auth(uname, pwd))
-                session = driver.session()
+                session = Graph(url=url, port=port, user=uname, password=pwd)
                 return session
             raise UserError(_("Neo4j Connection Not Found..!!"))
         except Exception as e:

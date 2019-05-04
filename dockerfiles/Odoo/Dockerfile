@@ -1,5 +1,5 @@
 FROM debian:stretch
-LABEL maintainer="Odoo S.A. <info@odoo.com>"
+LABEL maintainer="dstadel"
 
 # Generate locale C.UTF-8 for postgres and general locale data
 ENV LANG C.UTF-8
@@ -74,7 +74,6 @@ RUN set -x; \
 # Copy entrypoint script and Odoo configuration file
 RUN pip3 install num2words xlwt phonenumbers pysftp cryptography paramiko py2neo
 COPY ./entrypoint.sh /
-RUN ["chmod", "+x", "/entrypoint.sh"]
 COPY ./odoo.conf /etc/odoo/
 RUN chown odoo /etc/odoo/odoo.conf
 
