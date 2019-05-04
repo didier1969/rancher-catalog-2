@@ -23,6 +23,9 @@ RUN set -x; \
             python3-vobject \
             python3-watchdog \
             xz-utils \
+            nano \
+            zip \
+            unzip \
         && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
         && echo '7e35a63f9db14f93ec7feeb0fce76b30c08f2057 wkhtmltox.deb' | sha1sum -c - \
         && dpkg --force-depends -i wkhtmltox.deb\
@@ -69,14 +72,20 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy entrypoint script and Odoo configuration file
-RUN pip3 install num2words xlwt
+RUN pip3 install num2words xlwt phonenumbers pysftp cryptography paramiko py2neo
 COPY ./entrypoint.sh /
+RUN ["chmod", "+x", "/entrypoint.sh"]
 COPY ./odoo.conf /etc/odoo/
 RUN chown odoo /etc/odoo/odoo.conf
 
 # Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN mkdir -p /mnt/extra-addons \
         && chown -R odoo /mnt/extra-addons
+
+# Copy the Odoo Utility modules to /mnt/extra-addons
+COPY ./README.md /mnt/extra-addons/
+COPY ./odoo-custom-modules/ /mnt/extra-addons/
+
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
 # Expose Odoo services
