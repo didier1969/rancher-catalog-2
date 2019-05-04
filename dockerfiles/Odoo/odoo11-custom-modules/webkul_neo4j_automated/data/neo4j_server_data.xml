@@ -1,0 +1,98 @@
+<odoo>
+	<data noupdate="1">
+        <record id="neo4j_create_name" model="wk.fields.mapping">
+            <field name="field1_name">order_id</field>
+            <field name="field2_name">SaleOrderName</field>
+        </record>
+        <record id="neo4j_create_partner" model="wk.fields.mapping">
+            <field name="field1_name">partner_id</field>
+            <field name="field2_name">CustomerName</field>
+        </record>
+        <record id="neo4j_create_line" model="wk.fields.mapping">
+            <field name="field1_name">name</field>
+            <field name="field2_name">OrderLineName</field>
+        </record>
+        <record id="neo4j_create_product" model="wk.fields.mapping">
+            <field name="field1_name">product_id</field>
+            <field name="field2_name">ProductName</field>
+        </record>
+        <record id="neo4j_id" model="wk.fields.mapping">
+            <field name="field1_name">id</field>
+            <field name="field2_name">ID</field>
+        </record>
+     	<record id="create_neo4j_order_line_server_action" model="ir.actions.server">
+	        <field name="name">Create on Neo4j Server</field>
+	        <field name="model_id" ref="sale.model_sale_order_line"/>
+	        <field name="condition">True</field>
+	        <field name="type">ir.actions.server</field>
+	        <field name="state">code</field>
+	        <field name="code">env['base.automation'].execute_query(record)</field>
+        </record>
+        <record id="rule_neo4j_order_line_server_on create" model="base.automation">
+            <field name="name">Sale Order Line Create on Neo4j</field>
+            <field name="model_id" ref="sale.model_sale_order_line"/>
+            <field name="sequence">50</field>
+            <field name="trigger">on_create</field>
+            <field name="is_neo4j">True</field>
+            <field name='query'>MERGE (cust:CUSTOMER {name:{CustomerName}})  MERGE  (cust)-[:CUSTOMER]->(order:SaleOrder {name:{SaleOrderName}})  MERGE (product:PRODUCT {name:{ProductName}}) MERGE (product)-[:OrderlineProduct]->(orderline:SaleOrderLine {name:{OrderLineName}}) MERGE (orderline)-[:OrderLine]->(order) RETURN order</field>
+            <field name="field_ids" eval="[(6, 0, [ref('neo4j_create_name'),ref('neo4j_create_partner'),ref('neo4j_create_line'),ref('neo4j_create_product')])]"/>
+            <field name="action_server_id" ref="create_neo4j_order_line_server_action"/>
+        </record>
+
+        <record id="neo4j_create_customer" model="wk.fields.mapping">
+            <field name="field1_name">name</field>
+            <field name="field2_name">CustomerName</field>
+        </record>
+        <record id="neo4j_custome_email" model="wk.fields.mapping">
+            <field name="field1_name">email</field>
+            <field name="field2_name">Email</field>
+        </record>
+
+
+        <record id="create_neo4j_customer_server_action" model="ir.actions.server">
+            <field name="name">Create on Neo4j Server</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">env['base.automation'].execute_query(record)</field>
+        </record>
+        <record id="rule_neo4j_customer_server_on create" model="base.automation">
+            <field name="name">Customer Create on Neo4j</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="sequence">50</field>
+            <field name="trigger">on_create</field>
+            <field name="is_neo4j">True</field>
+            <field name='query'>MERGE (cust:CUSTOMER {id:{ID}}) SET cust.name= {CustomerName},cust.email={Email} return cust</field>
+            <field name="field_ids" eval="[(6, 0, [ref('neo4j_create_customer'),ref('neo4j_id'),ref('neo4j_custome_email')])]"/>
+            <field name="action_server_id" ref="create_neo4j_customer_server_action"/>
+        </record>
+         <record id="neo4j_create_product_product" model="wk.fields.mapping">
+            <field name="field1_name">name</field>
+            <field name="field2_name">ProductName</field>
+        </record>
+        <record id="neo4j_create_price" model="wk.fields.mapping">
+            <field name="field1_name">lst_price</field>
+            <field name="field2_name">Price</field>
+        </record>
+
+        <record id="create_neo4j_product_server_action" model="ir.actions.server">
+            <field name="name">Create on Neo4j Server</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">env['base.automation'].execute_query(record)</field>
+        </record>
+        <record id="rule_neo4j_product_server_on create" model="base.automation">
+            <field name="name">Product Create on Neo4j</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="sequence">50</field>
+            <field name="trigger">on_create</field>
+            <field name="is_neo4j">True</field>
+            <field name='query'>MERGE (p:PRODUCT {id:{ID}}) SET p.name= {ProductName},p.price={Price} return p</field>
+            <field name="field_ids" eval="[(6, 0, [ref('neo4j_create_product_product'),ref('neo4j_id'),ref('neo4j_create_price')])]"/>
+            <field name="action_server_id" ref="create_neo4j_product_server_action"/>
+        </record>
+	</data>
+</odoo>
