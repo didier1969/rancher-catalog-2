@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Action Rule Tree View -->
+        <record id="view_wk_neo4j_action_rule_tree" model="ir.ui.view">
+            <field name="name">wk.neo4j.action.rule.tree</field>
+            <field name="model">base.automation</field>
+            <field name="arch" type="xml">
+                <tree string="Action Rule">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="trigger"/>
+                    <field name="model_id"/>
+                    <!-- <field name="filter_id"/> -->
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_wk_neo4j_action_rule_form" model="ir.ui.view">
+            <field name="name">wk.neo4j.action.rule.form</field>
+            <field name="model">base.automation</field>
+            <field name="arch" type="xml">
+                <form string="Neo4j Action Rule">
+                    <header>
+                        <field name="binding_model_id" invisible="1"/>
+                        <button name="create_action" string="Create Contextual Action" type="object"
+                                class="btn-primary"
+                                attrs="{'invisible':[('binding_model_id','!=',False)]}"
+                                help="Display an option in the 'More' top-menu in order to run this action."/>
+                        <button name="unlink_action" string="Remove Contextual Action" type="object"
+                                attrs="{'invisible':[('binding_model_id','=',False)]}"
+                                help="Remove 'More' top-menu contextual action related to this action"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="e.g. Update order quantity"/></h1>
+                        </div>
+                        <group name="action_wrapper">
+                            <group name="action_content">
+                                <field name="model_id"/>
+                                <field name="model_name" invisible="1"/>
+                                <field name="state"/>
+                                <field name="is_neo4j"/>
+                                <field name="type" invisible="1"/>
+                                <field name="crud_model_id"
+                                    attrs="{'invisible': [('state', '!=', 'object_create')], 'required': [('state', '=', 'object_create')]}"/>
+                                <field name="crud_model_name" invisible="1"/>
+                                <field name="link_field_id"
+                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]"
+                                    attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
+                                
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Python Code" name='code' autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'code')]}">
+                                <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
+                            </page>
+
+                            <page string="Data to Write" autofocus="autofocus"
+                                    attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
+                                <p attrs="{'invisible': [('model_id', '!=', False)]}">
+                                    Please set the Model to Create before choosing values
+                                </p>
+                                <field name="fields_lines">
+                                     <tree string="Field Mappings" editable="bottom">
+                                        <field name="col1" domain="['|', ('model_id', '=', parent.crud_model_id), ('model_id', '=', parent.model_id)]"/>
+                                        <field name="type"/>
+                                        <field name="value"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page string="Actions" autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'multi')]}">
+                                <p class="oe_grey">
+                                    If several child actions return an action, only the last one will be executed.
+                                    This may happen when having server actions executing code that returns an action, or server actions returning a client action.
+                                </p>
+                                <field name="child_ids" domain="[('model_id', '=', model_id)]"/>
+                            </page>
+
+                            <page string="Help"
+                                    attrs="{'invisible': [('state', '!=', 'code')]}">
+                                <group>
+                                    <div style="margin-top: 4px;">
+                                        <h3>Help with Python expressions</h3>
+                                        <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
+                                        <ul>
+                                            <li><code>env</code>: Odoo Environment on which the action is triggered</li>
+                                            <li><code>model</code>: Odoo Model of the record on which the action is triggered; is a void recordset</li>
+                                            <li><code>record</code>: record on which the action is triggered; may be be void</li>
+                                            <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
+                                            <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
+                                            <li><code>log(message, level='info')</code>:logging function to record debug information in <code>ir.logging</code> table</li>
+                                            <li><code>Warning</code>: Warning Exception to use with <code>raise</code></li>
+                                            <li>To return an action, assign: <code>action = {...}</code></li>
+                                        </ul>
+                                        <div attrs="{'invisible': [('state', '!=', 'code')]}">
+                                            <p>Example of Python code</p>
+<code style='white-space: pre-wrap'>
+partner_name = record.name + '_code'
+env['res.partner'].create({'name': partner_name})
+</code>
+                                        </div>
+                                    </div>
+                                </group>
+                            </page>
+
+                            <page string="Query" attrs="{'invisible':[('is_neo4j','!=',True)]}">
+                                <label for="query" string="Neo4j Query"/>
+                                <field name="query" attrs="{'required':[('is_neo4j','=',True)]}"/>
+                           </page>
+                           <page string="Mapping Fields"  attrs="{'invisible':[('is_neo4j','!=',True)]}">
+                                <field name="field_ids"  attrs="{'required':[('is_neo4j','=',True)]}">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="field1_name"/>
+                                        <field name="field2_name" />
+                                    </tree>
+                                </field>
+                           </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+         <record id="view_wk_neo4j_mapping_tree" model="ir.ui.view">
+            <field name="name">wk.neo4j.field.mapping</field>
+            <field name="model">wk.fields.mapping</field>
+            <field name="arch" type="xml">
+                <tree string="Mapping Fields">
+                    <field name="field1_name"/>
+                    <field name="field2_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action Rule Action -->
+        <record id="wk_neo4j_action_rule_action" model="ir.actions.act_window">
+            <field name="name">Queries</field>
+            <field name="res_model">base.automation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'is_neo4j':True}</field>
+            <field name="domain">[('is_neo4j','=',True)]</field>
+            <field name="view_id" ref="view_wk_neo4j_action_rule_tree"/>
+        </record>
+
+         <record id="wk_neo4j_mapping_field" model="ir.actions.act_window">
+            <field name="name">Mappings</field>
+            <field name="res_model">wk.fields.mapping</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wk_neo4j_mapping_tree"/>
+        </record>
+
+        <record id="wk_neo4j_action_rule_action_to_tree" model="ir.actions.act_window.view">
+            <field name="sequence">0</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="webkul_neo4j_automated.view_wk_neo4j_action_rule_tree"/>
+            <field name="act_window_id" ref="webkul_neo4j_automated.wk_neo4j_action_rule_action"/>
+        </record>
+
+         <record id="wk_neo4j_action_rule_action_to_form" model="ir.actions.act_window.view">
+                <field name="sequence">1</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="webkul_neo4j_automated.view_wk_neo4j_action_rule_form"/>
+            <field name="act_window_id" ref="webkul_neo4j_automated.wk_neo4j_action_rule_action"/>
+        </record>
+
+        
+
+        <menuitem id="neo4j_parent_menu" name="Neo4j" groups="base.group_no_one"/>
+                    
+        <menuitem  id="menu_neo4j_1" name="Neo4j" parent="neo4j_parent_menu" sequence="1"/>
+        <menuitem id="menu_neo4j_submenu2"
+            parent="menu_neo4j_1" action="wk_neo4j_action_rule_action" sequence="2"/>
+         <menuitem id="menu_neo4j_submenu4"
+            parent="menu_neo4j_1" action="wk_neo4j_mapping_field" sequence="3"/>
+
+    </data>
+</odoo>

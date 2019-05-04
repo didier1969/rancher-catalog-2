@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="odoo_neo4j_configuration_form" model="ir.ui.view">
+            <field name="name">Neo4j Configuration Setting</field>
+            <field name="model">odoo.neo4j.config</field>
+            <field name="arch" type="xml">
+                <form string="Neo4j Configuration">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name"  />
+                        </h1>
+                        </div>
+                        <group>
+                            <group name="authentication">
+                                <field name="url"/>
+                                <field name="authentatic_type" />
+                                <field name="cypher_text" invisible="1"/>
+                            </group>
+                            <group name="other_info">
+                                <field name="username"/>
+                                <field name="password" password="True"/>
+                            </group>
+                        </group>
+                        <group name="note" string="Note">
+                            <div>
+                        <ul>
+                            <li>
+
+                                If you use Neo4j database server in your local then in Url use <b>"bolt"</b>.<br/>
+                                Example: bolt://localhost
+                            </li>
+                            <li>
+                                If you use Neo4j database server that access publicly then in Url use <b>"http"</b>.<br/>
+                                Example: http://abc.com
+                            </li>
+                        </ul>
+                    </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="odoo_neo4j_configuration_tree" model="ir.ui.view">
+            <field name="name">Neo4j Configuration Setting</field>
+            <field name="model">odoo.neo4j.config</field>
+            <field name="arch" type="xml">
+                <tree string="Neo4j Configuration">
+                    <field name="name"/>
+                    <field name="url" />
+                    <field name="authentatic_type"/>
+                </tree>
+            </field>
+        </record>
+          <record id="odoo_neo4j_configuration_action" model="ir.actions.act_window">
+            <field name="name">Credentials</field>
+            <field name="res_model">odoo.neo4j.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="odoo_neo4j_configuration_tree"/>
+        </record>
+
+         <menuitem id="menu_neo4j_submenu3"
+            parent="menu_neo4j_1" action="odoo_neo4j_configuration_action" sequence="1"/>
+    </data>
+</odoo>
