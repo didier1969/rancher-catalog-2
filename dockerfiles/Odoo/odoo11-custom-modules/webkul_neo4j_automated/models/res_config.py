@@ -26,9 +26,9 @@ class OdooNeo4jConfig(models.Model):
 
 
     url = fields.Char(string='Base URL', required=True, copy=False)
+    port = fields.Char(string='Bolt Port', default="7687", required=True, copy=False)
     name = fields.Char(string='Name', required=True, copy=False)
     active = fields.Boolean(string="Active", default=True, copy=False)
-    authentatic_type = fields.Selection([('Basic','Basic')],string="Authentaction Type", default="Basic",required=True, copy=False)
     cypher_text = fields.Char(string="Cypher Code",copy=False)
     username = fields.Char(string="User Name", required=True, copy=False)
     password = fields.Char(string="Password", required=True, copy=False)
