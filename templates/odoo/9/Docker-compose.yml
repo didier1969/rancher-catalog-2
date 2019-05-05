@@ -1,0 +1,34 @@
+version: '2'
+services:
+  neo4j:
+    image: neo4j
+    restart: always
+    volumes:
+    - neo4j-mrp3-data:/data
+    ports:
+    - 7484:7474/tcp
+    - 7697:7687/tcp
+  web:
+    image: dstadel/odoo:12.0
+    restart: always
+    volumes:
+    - odoo-mrp3-data:/var/lib/odoo
+    - odoo-mrp3-config:/etc/odoo
+    - odoo-mrp3-addons:/mnt/extra-addons
+    ports:
+    - 8489:8069/tcp
+  db:
+    image: postgres:11
+    restart: always
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_USER: odoo
+    volumes:
+    - odoo-mrp3-db-data:/var/lib/postgresql/data/pgdata
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+    - 8488:8080
