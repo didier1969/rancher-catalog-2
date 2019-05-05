@@ -10,5 +10,3 @@
       required: true
       default: 8469 
       type: "string"
-
-dstadel/odoo:
