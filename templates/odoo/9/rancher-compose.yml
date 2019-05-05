@@ -1,0 +1,14 @@
+.catalog:
+  name: "Odoo"
+  version: v0.9-dstadel
+  description: "ERP management powered by Odoo + Neo4j + Adminer"
+  uuid: odoo-0
+  questions:
+    - variable: "odoo_port"
+      description: "Public port of the Odoo website."
+      label: "Odoo Port:"
+      required: true
+      default: 8469 
+      type: "string"
+
+odoo:
