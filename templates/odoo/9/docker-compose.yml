@@ -11,7 +11,7 @@ services:
     labels:
       io.rancher.container.pull_image: always
   web:
-    image: dstadel/odoo:12.0
+    image: dstadel/odoo
     labels:
       io.rancher.container.pull_image: always
     restart: always
