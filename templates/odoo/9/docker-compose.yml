@@ -8,17 +8,23 @@ services:
     ports:
     - 7484:7474/tcp
     - 7697:7687/tcp
+    labels:
+      io.rancher.container.pull_image: always
   web:
     image: dstadel/odoo:12.0
+    labels:
+      io.rancher.container.pull_image: always
     restart: always
     volumes:
     - odoo-mrp3-data:/var/lib/odoo
     - odoo-mrp3-config:/etc/odoo
     - odoo-mrp3-addons:/mnt/extra-addons
     ports:
-    - 8489:8069/tcp
+      - "${odoo_port}:8069"
   db:
     image: postgres:11
+    labels:
+      io.rancher.container.pull_image: always
     restart: always
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
@@ -29,6 +35,9 @@ services:
     - odoo-mrp3-db-data:/var/lib/postgresql/data/pgdata
   adminer:
     image: adminer
+    labels:
+      io.rancher.container.pull_image: always
     restart: always
     ports:
     - 8488:8080
+
