@@ -11,4 +11,4 @@
       default: 8469 
       type: "string"
 
-odoo:
+dstadel/odoo:
