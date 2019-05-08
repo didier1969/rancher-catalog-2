@@ -47,7 +47,7 @@ class BaseAutomation(models.Model):
                 port = connection_obj.port
                 uname = connection_obj.username
                 pwd = connection_obj.password
-                session = Graph(url=url, port=port, user=uname, password=pwd)
+                session = Graph(host=url, user=uname, password=pwd)
                 return session
             raise UserError(_("Neo4j Connection Not Found..!!"))
         except Exception as e:
