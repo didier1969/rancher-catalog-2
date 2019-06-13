@@ -74,7 +74,7 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy entrypoint script and Odoo configuration file
-RUN pip3 install num2words xlwt phonenumbers pysftp cryptography paramiko py2neo
+RUN pip3 install num2words xlwt phonenumbers pysftp cryptography paramiko py2neo networkx pendulum
 COPY ./entrypoint.sh /
 RUN ["chmod", "+x", "/entrypoint.sh"]
 COPY ./odoo.conf /etc/odoo/
